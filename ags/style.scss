@@ -1,0 +1,105 @@
+$fg-color: #{"@theme_fg_color"};
+$bg-color: #{"@theme_bg_color"};
+
+* {
+    font-family: "PixelMplus10", sans-serif;
+    font-size: 17px;
+    font-weight: 300;
+}
+
+window#bar {
+    background: transparent;
+    font-weight: bold;
+    color: $fg-color;
+
+    >box {
+        background: $bg-color;
+        margin: 8px;
+    }
+}
+
+button {
+    border-radius: 0px;
+}
+
+image {
+    margin: -15px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+label {
+    color: #32157f;
+}
+.image {
+    padding-right: 15px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.calendar-button {
+    border-left: solid #755D9B 2px;
+    border-top: solid #989BE4 2px;
+    border-right: solid #E9E3EA 2px;
+    border-bottom: solid #E9E1EA 2px;
+    background-color: #f6e0f8;
+    min-height: 30px;
+    max-height: 50px;
+    margin: 5px;
+    min-width: 200px;
+    margin-right: 10px;
+}
+
+.start-image {
+    padding: 0px;
+    margin-right: 20px;
+    border: none;
+    margin-bottom: -20px;
+}
+
+.spacer {
+    min-width: 5px;
+    min-height: 20px;
+    border-color: black;
+}
+
+
+.start-button {
+    border-left: solid #ffffff 1px;
+    border-top: solid #ffffff 1px;
+    border-right: solid #7554C5 2px;
+    border-bottom: solid #7554C5 2px;
+    background-color: #f6e0f8;
+    min-height: 20px;
+    margin: 5px;
+    margin-left: 10px;
+    min-width: 100px;
+    margin-bottom: 5px;
+}
+
+.start-text {
+    margin-right: 20px;
+    font-size: 20px;
+    margin-right: 20px;
+    margin-bottom: -5px;
+}
+
+
+.something {
+    min-width: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-bottom: solid #7756C7 2px;
+    border-right: solid #7756C7 2px;
+    border-top: solid white 1px;
+    border-left: solid white 1px;
+}
+
+.tweeter {
+    background-color: #f6e0f8;
+}
+
+window {
+    border-top: solid 2px white;
+    background-color: #f6e0f8;
+}
