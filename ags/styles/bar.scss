@@ -1,0 +1,137 @@
+$fg-color: #{"@theme_fg_color"};
+$bg-color: #{"@theme_bg_color"};
+
+//? This is just to save the background statements
+%background-color {
+    background-color: #f6e0f8;
+}
+
+//? This is used for things that look like they are embedded to the taskbar.
+%embedded {
+    @extend %background-color;
+    border-left: solid #7654C4 2px;
+    border-top: solid #7654C4 2px;
+    border-right: solid white 1px;
+    border-bottom: solid white 1px;
+}
+
+//? Border settings for the items that look like they are popping out.
+%popout {
+    @extend %background-color;
+    border-right: solid #7554C5 2px;
+    border-bottom: solid #7554C5 2px;
+    border-left: solid #ffffff 1px;
+    border-top: solid #ffffff 1px;
+}
+
+//! Overall styles
+
+//? Make sure all of our text is the same font, color, and size.
+* {
+    font-family: "PixelMplus10", sans-serif;
+    font-size: 17px;
+    font-weight: 300;
+    color: #32157f;
+}
+
+//? Make it so the buttons dont have a wierd background color.
+button {
+    background-color: transparent;
+}
+
+//? Fix wierd margin things with images.
+image {
+    margin: -15px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+
+//? Taskbar colors.
+.main-bar {
+    border-top: solid 2px white;
+    background-color: #f6e0f8;
+}
+
+//! Calendar Items
+.calendar-button {
+    @extend %embedded;
+    min-height: 30px;
+    margin: 5px;
+    min-width: 200px;
+    margin-right: 10px;
+}
+
+.time-image {
+    padding-right: 15px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+//! Start button Items
+.start-image {
+    padding: 0px;
+    margin-right: 20px;
+    border: none;
+    margin-bottom: -19px;
+    margin-left: -5px;
+}
+
+.start-button {
+    @extend %popout;
+    min-height: 20px;
+    margin: 5px;
+    margin-left: 10px;
+    min-width: 100px;
+    margin-bottom: 5px;
+    border-radius: 0px;
+}
+
+.start-button:active {
+    @extend %embedded;
+}
+
+.start-text {
+    margin-right: 10px;
+    font-size: 20px;
+    margin-right: 10px;
+    margin-bottom: 0px;
+    color: black;
+}
+
+//! Dividers
+.divider {
+    @extend %popout;
+    min-width: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+//? In development text.
+.dev-text {
+    @extend %popout;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+
+//! Tray looks
+.tray-holder {
+    margin-left: 8px;
+}
+
+.tray-button {
+    @extend %embedded;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+.tray-icon {
+    margin-right: 10px;
+}

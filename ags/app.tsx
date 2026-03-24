@@ -1,7 +1,8 @@
 import app from "ags/gtk4/app";
-import style from "./style.scss";
-import { Bar } from "./Bar";
+import style from "./styles/main.scss";
+import { Bar } from "./windows/taskbar/Bar";
 import { createBinding, For, This} from "ags";
+import StartMenu, { StartCloser } from "./windows/startMenu/startMenu";
 
 app.start({
     css: style,
@@ -14,6 +15,8 @@ app.start({
                 {(monitor) => (
                     <This this={app}>
                         <Bar gdkmonitor={monitor} />
+                        <StartCloser gdkmonitor={monitor} />
+                        <StartMenu gdkmonitor={monitor} />
                     </This>
                 )}
             </For>

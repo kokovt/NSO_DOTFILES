@@ -1,0 +1,45 @@
+.menu-holder {
+    min-width: 200px;
+    min-height: 200px;
+    background: #4F30BA;
+    background: linear-gradient(0deg, #4d21cb 0%, rgba(109, 90, 198, 1) 50%, rgba(138, 114, 200, 1) 100%);
+}
+
+.menu-button-holder {
+    margin-left: 15px;
+    min-width: 200px;
+    background-color: #f6e0f8;
+}
+
+.menu-button {
+    border-radius: 0px;
+    border-bottom: solid 2px #795BD0;
+    border-right: solid 2px #795BD0;
+    border-top: solid 2px white;
+    border-left: solid 2px white;
+}
+
+
+.menu-button:hover {
+    background-color: #4D23CD;
+    color: white;
+    border-bottom: solid 2px black;
+    border-right: solid 2px black;
+
+    > label {
+        color: white;
+    }
+}
+
+.sideways-text {
+    transform: rotate(-90deg);
+    color: white;
+    margin-left: -105px;
+    margin-right: -120px;
+    font-size: smaller;
+    margin-bottom: 0px;
+}
+
+.closer {
+    background-color: rgba($color: #00000000, $alpha: 0.01);
+}
