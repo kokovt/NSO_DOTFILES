@@ -3,9 +3,10 @@ import Astal from "gi://Astal?version=4.0";
 import GLib from "gi://GLib?version=2.0";
 import Gtk from "gi://Gtk?version=4.0";
 import { createPoll } from "ags/time";
-import { For, createBinding } from "ags"
+import { For, createBinding, createComputed } from "ags"
 import Gdk from "gi://Gdk?version=4.0";
-import { exec, execAsync } from "ags/process";
+import AstalBattery from "gi://AstalBattery"
+import { execAsync } from "ags/process";
 import AstalTray from "gi://AstalTray"
 import AstalHyprland from "gi://AstalHyprland";
 import Cairo from "cairo";
@@ -57,6 +58,25 @@ function Clock({ format = "Day %d %H:%M (%A)" }) {
                 <Gtk.Calendar />
             </popover>
         </menubutton>
+    )
+}
+
+function BatteryIndicator() {
+    const device = AstalBattery.Device.get_default()
+
+    if (!device) {
+        return <box />
+    }
+
+    const batteryIcon = createBinding(device, "battery_icon_name")
+    const percentage = createBinding(device, "percentage")
+    const pctLabel = createComputed(() => `${Math.round(percentage() * 100)}%`)
+
+    return (
+        <box class="battery-box">
+            <image class="battery-image" iconName={batteryIcon as any} pixelSize={20} />
+            <label label={pctLabel as any} class="battery-text" />
+        </box>
     )
 }
 
@@ -179,6 +199,7 @@ export function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
                     <Tray />
                 </box>
                 <box $type="end">
+                    <BatteryIndicator />
                     <Clock />
                 </box>
             </centerbox>
