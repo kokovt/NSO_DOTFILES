@@ -73,7 +73,7 @@ function BatteryIndicator() {
     const pctLabel = createComputed(() => `${Math.round(percentage() * 100)}%`)
 
     return (
-        <box class="battery-box">
+        <box class="battery-box" visible={device.isBattery}>
             <image class="battery-image" iconName={batteryIcon as any} pixelSize={20} />
             <label label={pctLabel as any} class="battery-text" />
         </box>
