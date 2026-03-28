@@ -5,6 +5,7 @@ import Gdk from "gi://Gdk?version=4.0";
 import { For, createBinding } from "ags";
 import { execAsync } from "ags/process";
 import AstalTray from "gi://AstalTray";
+import AstalBattery from "gi://AstalBattery";
 
 function trayItemInit(btn: Gtk.MenuButton, item: AstalTray.TrayItem) {
     btn.menuModel = item.menuModel
@@ -33,7 +34,7 @@ export default function TrayPanel({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
             keymode={Astal.Keymode.ON_DEMAND}
             exclusivity={Astal.Exclusivity.IGNORE}
             visible={false}
-            marginRight={8}>
+            marginRight={AstalBattery.Device.get_default()?.isBattery ? 80 : 0}>
             <box class="tray-popover-box" orientation={Gtk.Orientation.VERTICAL}>
                 <Gtk.FlowBox
                     class="tray-popover-flow"
