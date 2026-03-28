@@ -3,25 +3,11 @@ import Astal from "gi://Astal?version=4.0";
 import GLib from "gi://GLib?version=2.0";
 import Gtk from "gi://Gtk?version=4.0";
 import { createPoll } from "ags/time";
-import { For, createBinding, createComputed } from "ags"
+import { createBinding, createComputed, createEffect, createState } from "ags"
 import Gdk from "gi://Gdk?version=4.0";
 import AstalBattery from "gi://AstalBattery"
 import { execAsync } from "ags/process";
-import AstalTray from "gi://AstalTray"
 import AstalHyprland from "gi://AstalHyprland";
-import Cairo from "cairo";
-
-
-//? Helper functions
-function createLabel(item: any) {
-    let text = item.title;
-
-    if (text == "" || text == undefined) {
-        text = item.tooltip_text;
-    }
-    return text;
-}
-
 
 //! Clock is heavily modified from AGSv2 examples.
 //? The format is DAY Y XX:XX (XXXDAY)
@@ -133,33 +119,45 @@ function TaskManager() {
     )
 }
 
-//! Tray is heavily modified from AGSv2 examples.
-//* Shows as application names, since apps cant be minimized.
-function Tray() {
-    const tray = AstalTray.get_default()
-    const items = createBinding(tray, "items")
+//! Toggles layer-shell tray window + fullscreen closer (same pattern as start menu).
+function TrayToggle({ connector }: { connector: string }) {
+    const panelName = `tray-panel-${connector}`
+    const [trayOpen, setTrayOpen] = createState(false)
 
-    const init = (btn: Gtk.MenuButton, item: AstalTray.TrayItem) => {
-        btn.menuModel = item.menuModel
-        btn.insert_action_group("dbusmenu", item.actionGroup)
-        item.connect("notify::action-group", () => {
-            btn.insert_action_group("dbusmenu", item.actionGroup)
+    createEffect(() => {
+        const sync = () => {
+            const w = app.get_window(panelName)
+            if (w) setTrayOpen(w.visible)
+        }
+        sync()
+        const idToggle = app.connect("window-toggled", (_src, win: Gtk.Window) => {
+            if (win.name === panelName) setTrayOpen(win.visible)
         })
-    }
+        const lateSync = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 250, () => {
+            sync()
+            return GLib.SOURCE_REMOVE
+        })
+        return () => {
+            app.disconnect(idToggle)
+            GLib.source_remove(lateSync)
+        }
+    })
+
+    const arrowIcon = createComputed(() =>
+        trayOpen() ? "pan-down-symbolic" : "pan-up-symbolic",
+    )
 
     return (
-        <box class="tray-holder">
-            <For each={items}>
-                {(item) => (
-                    <menubutton class="tray-button" $={(self) => init(self, item)}>
-                        <box>
-                            <image gicon={createBinding(item, "gicon")} class="tray-icon" />
-                            <label label={createLabel(item)} />
-                        </box>
-                    </menubutton>
-                )}
-            </For>
-        </box>
+        <button
+            class="tray-toggle-button"
+            onClicked={() => {
+                execAsync(`ags toggle ${panelName}`)
+                execAsync(`ags toggle tray-panel-closer-${connector}`)
+            }}>
+            <box class="tray-toggle-inner">
+                <image class="tray-toggle-arrow" iconName={arrowIcon as any} pixelSize={10} />
+            </box>
+        </button>
     )
 }
 
@@ -185,7 +183,7 @@ export function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
             anchor={BOTTOM | LEFT | RIGHT}
             application={app}
             class="main-bar"
-            layer={Astal.Layer.BOTTOM}>
+            layer={Astal.Layer.BACKGROUND}>
             <centerbox>
                 <box $type="start">
                     <StartButton />
@@ -195,10 +193,9 @@ export function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
                     <TaskManager />
                     <Divider />
                     <label label="In development~" class="dev-text" />
-                    <Divider />
-                    <Tray />
                 </box>
                 <box $type="end">
+                    <TrayToggle connector={gdkmonitor.connector} />
                     <BatteryIndicator />
                     <Clock />
                 </box>

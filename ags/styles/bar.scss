@@ -51,6 +51,8 @@ image {
 .main-bar {
     border-top: solid 2px white;
     background-color: #f6e0f8;
+    padding: 0px;
+    margin-top: 0px;
 }
 
 //! Calendar Items
@@ -139,18 +141,21 @@ image {
 }
 
 
-//! Tray looks
-.tray-holder {
-    margin-left: 8px;
-}
-
-.tray-button {
+//! Tray styles
+//! Tray toggle (before battery)
+.tray-toggle-button {
     @extend %embedded;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    margin-right: 5px;
+    margin: 5px;
+    margin-right: 6px;
+    border-radius: 0px;
 }
 
-.tray-icon {
-    margin-right: 10px;
+.tray-toggle-inner {
+    padding-left: 2px;
+    padding-right: 1px;
+}
+
+.tray-toggle-arrow {
+    margin: 0;
+    padding: 0;
 }

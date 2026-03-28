@@ -1,0 +1,30 @@
+@use "./bar.scss";
+
+.tray-panel-window {
+    margin-bottom: 50px;
+    margin-right: 230px;
+    padding-bottom: 0px;
+}
+
+
+.tray-panel-window {
+    background-color: transparent;
+}
+
+.tray-popover-box {
+    border-top: solid 2px white;
+    border-left: solid 2px white;
+    border-right: solid 2px white;
+    background-color: #f6e0f8;
+    padding: 0px;
+    margin-top: 0px;
+}
+
+.tray-popover-flow {
+    margin: 0;
+}
+
+.tray-popover-item {
+    @extend %embedded;
+}
+
