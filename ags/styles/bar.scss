@@ -68,6 +68,25 @@ image {
     padding-bottom: 0px;
 }
 
+//! Battery (next to clock)
+.battery-box {
+    @extend %embedded;
+    min-height: 30px;
+    margin: 5px;
+    margin-right: 6px;
+}
+
+.battery-text {
+    margin-right: 10px;
+}
+
+.battery-image {
+    padding-right: 8px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-left: 10px;
+}
+
 //! Start button Items
 .start-image {
     padding: 0px;
