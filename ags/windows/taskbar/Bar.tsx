@@ -96,10 +96,10 @@ function TweeterButton() {
 }
 
 //TODO Reimplement the jine from in game.
-function JineButton() {
+function JineButton({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
     return (
         <button onClicked={() => {
-            execAsync("discord");
+            execAsync(`ags toggle jine-${gdkmonitor.connector}`);
             return;
         }} class="game-buttons">
             <image file="./images/icon_taskbar_jine.png" pixelSize={25}></image>
@@ -189,7 +189,7 @@ export function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
                     <StartButton />
                     <Divider />
                     <TweeterButton />
-                    <JineButton />
+                    <JineButton gdkmonitor={gdkmonitor} />
                     <TaskManager />
                     <Divider />
                     <label label="In development~" class="dev-text" />
