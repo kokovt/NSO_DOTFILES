@@ -8,6 +8,7 @@ import Gdk from "gi://Gdk?version=4.0";
 import AstalBattery from "gi://AstalBattery"
 import { execAsync } from "ags/process";
 import AstalHyprland from "gi://AstalHyprland";
+import { jineLauncherByMonitor, setJineLauncherVisible } from "./jineLauncherState";
 
 //! Clock is heavily modified from AGSv2 examples.
 //? The format is DAY Y XX:XX (XXXDAY)
@@ -95,16 +96,71 @@ function TweeterButton() {
     )
 }
 
-//TODO Reimplement the jine from in game.
+//? Pixel Jine: opens JINE + bar launcher when the window is hidden; no-op while it is open.
 function JineButton({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
+    const name = `jine-${gdkmonitor.connector}`;
     return (
         <button onClicked={() => {
-            execAsync(`ags toggle jine-${gdkmonitor.connector}`);
-            return;
+            const w = app.get_window(name) as Gtk.Window | null;
+            if (w?.visible) return;
+            setJineLauncherVisible(gdkmonitor.connector, true);
+            execAsync(`ags toggle ${name}`);
         }} class="game-buttons">
             <image file="./images/icon_taskbar_jine.png" pixelSize={25}></image>
         </button>
     )
+}
+
+function JineBarLauncher({
+    gdkmonitor,
+    visible,
+}: {
+    gdkmonitor: Gdk.Monitor;
+    visible: () => boolean;
+}) {
+    const c = gdkmonitor.connector;
+    const winName = `jine-${c}`;
+    const [jineWinVisible, setJineWinVisible] = createState(false);
+
+    createEffect(() => {
+        const sync = () => {
+            const w = app.get_window(winName);
+            if (w) setJineWinVisible(w.visible);
+            else setJineWinVisible(false);
+        };
+        sync();
+        const idToggle = app.connect("window-toggled", (_src, win: Gtk.Window) => {
+            if (win.name === winName) setJineWinVisible(win.visible);
+        });
+        const lateSync = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 250, () => {
+            sync();
+            return GLib.SOURCE_REMOVE;
+        });
+        return () => {
+            app.disconnect(idToggle);
+            GLib.source_remove(lateSync);
+        };
+    });
+
+    const launcherBoxClass = createComputed(() =>
+        jineWinVisible()
+            ? "jine-launcher-box jine-launcher-look-embedded"
+            : "jine-launcher-box jine-launcher-look-popout",
+    );
+
+    return (
+        <button
+            class="jine-launcher-button"
+            visible={visible as any}
+            onClicked={() => {
+                execAsync(`ags toggle jine-${c}`);
+            }}>
+            <box class={launcherBoxClass as any}>
+                <label label="■" class="jine-launcher-square" />
+                <label label="JINE" class="jine-launcher-title" />
+            </box>
+        </button>
+    );
 }
 
 //TODO Add custom task manager 
@@ -172,6 +228,9 @@ function Divider() {
 export function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
     const { BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor;
     let win: Astal.Window;
+    const jineLauncherShown = createComputed(
+        () => jineLauncherByMonitor()[gdkmonitor.connector] ?? false,
+    );
 
     return (
         <window $={(self) => (win = self)}
@@ -193,6 +252,7 @@ export function Bar({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) {
                     <TaskManager />
                     <Divider />
                     <label label="In development~" class="dev-text" />
+                    <JineBarLauncher gdkmonitor={gdkmonitor} visible={jineLauncherShown} />
                 </box>
                 <box $type="end">
                     <TrayToggle connector={gdkmonitor.connector} />
